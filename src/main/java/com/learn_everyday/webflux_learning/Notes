@@ -1,0 +1,32 @@
+R2DBC
+=====
+1. JPA is a specification
+    It is for traditional synchronous programming.
+2. R2DBC is a separate specification
+    For reactive programming.
+3. R2DBC != JPA
+4. Prioritizes
+    1. Performance
+    2. Scalability
+    3. Streaming + Backpressure
+5. It does NOT have features like
+    @OneToMany
+    @ManyToMany
+
+Driver Implementations
+======================
+1. oracle
+2. h2
+3. maria
+4. mssql
+5. mysql
+6. postgresql
+
+Driver Config
+=============
+h2 - r2dbc:h2:mem:///userdb
+postgres - r2dbc:postgresql://localhost:5432/userdb
+mysql - r2dbc:mysql://localhost:3306/userdb
+
+
+
