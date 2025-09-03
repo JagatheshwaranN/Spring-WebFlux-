@@ -8,7 +8,7 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface CustomerRepository extends ReactiveCrudRepository<Customer, Integer> {
 
-    public Flux<Customer> findByName(String name);
+    Flux<Customer> findByName(String name);
 
-    public Flux<Customer> findByEmailEndsWith(String email);
+    Flux<Customer> findByEmailEndsWith(String email);
 }
