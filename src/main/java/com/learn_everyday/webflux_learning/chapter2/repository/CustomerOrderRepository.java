@@ -1,6 +1,7 @@
 package com.learn_everyday.webflux_learning.chapter2.repository;
 
 import com.learn_everyday.webflux_learning.chapter2.dto.OrderDetails;
+import com.learn_everyday.webflux_learning.chapter2.entity.CustomerOrder;
 import com.learn_everyday.webflux_learning.chapter2.entity.Product;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -10,7 +11,7 @@ import reactor.core.publisher.Flux;
 import java.util.UUID;
 
 @Repository
-public interface CustomerOrderRepository extends ReactiveCrudRepository<CustomerRepository, UUID> {
+public interface CustomerOrderRepository extends ReactiveCrudRepository<CustomerOrder, UUID> {
 
 
     @Query("""

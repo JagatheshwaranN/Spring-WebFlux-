@@ -27,3 +27,23 @@ Driver Config
 h2 - r2dbc:h2:mem:///userdb
 postgres - r2dbc:postgresql://localhost:5432/userdb
 mysql - r2dbc:mysql://localhost:3306/userdb
+
+Reactive Manifesto => Reactive Systems
+======================================
+Responsive      - The ability of the system to react / respond quickly.
+Resilient       - The ability of the system to stay responsive even in case of failures.
+Elastic         - The ability of the system to stay responsive even under varying workload / system resources.
+Message Driven  - The ability of the systems to communicate using the messages in a non-blocking manner
+                  by applying back pressure if necessary.
+
+Need for DTO (Data Transfer Object)
+============
+Advantages
+==========
+     1. Decoupling
+            DB Table vs API
+     2. Security
+            Data exposure
+            Customer entity might have password field. CustomerDTO might not have passsword.
+     3. Versioning
+     4. Validation

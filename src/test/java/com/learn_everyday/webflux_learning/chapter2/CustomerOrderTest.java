@@ -39,7 +39,6 @@ public class CustomerOrderTest extends AbstractTest {
                 .assertNext(order -> Assertions.assertEquals(950, order.amount()))
                 .expectComplete()
                 .verify();
-
     }
 
     @Test
