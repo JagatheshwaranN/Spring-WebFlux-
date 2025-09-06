@@ -1,11 +1,12 @@
 package com.learn_everyday.webflux_learning.chapter4.controller;
 
 import com.learn_everyday.webflux_learning.chapter4.dto.CustomerDto;
+import com.learn_everyday.webflux_learning.chapter4.exception.ApplicationException;
 import com.learn_everyday.webflux_learning.chapter4.service.CustomerService;
+import com.learn_everyday.webflux_learning.chapter4.validator.RequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -40,30 +41,30 @@ public class CustomerController {
     }
 
     @GetMapping("{id}")
-    public Mono<ResponseEntity<CustomerDto>> getCustomer(@PathVariable Integer id) {
+    public Mono<CustomerDto> getCustomer(@PathVariable Integer id) {
         return this.customerService.getCustomerById(id)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .switchIfEmpty(ApplicationException.customerNotFound(id));
     }
 
     @PostMapping
     public Mono<CustomerDto> saveCustomer(@RequestBody Mono<CustomerDto> customerDtoMono) {
-        return this.customerService.saveCustomer(customerDtoMono);
+        return customerDtoMono.transform(RequestValidator.validate())
+                .as(this.customerService::saveCustomer);
     }
 
     @PutMapping("{id}")
-    public Mono<ResponseEntity<CustomerDto>> updateCustomer(@PathVariable Integer id, @RequestBody Mono<CustomerDto> customerDtoMono) {
-        return this.customerService.updateCustomer(id, customerDtoMono)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+    public Mono<CustomerDto> updateCustomer(@PathVariable Integer id, @RequestBody Mono<CustomerDto> customerDtoMono) {
+        return customerDtoMono.transform(RequestValidator.validate())
+                .as(validRequest -> this.customerService.updateCustomer(id, validRequest))
+        .switchIfEmpty(ApplicationException.customerNotFound(id));
     }
 
     @DeleteMapping("{id}")
-    public Mono<ResponseEntity<Void>> deleteCustomer(@PathVariable Integer id) {
+    public Mono<Void> deleteCustomer(@PathVariable Integer id) {
         return this.customerService.deleteCustomerById(id)
                 .filter(value -> value)
-                .map(value -> ResponseEntity.ok().<Void>build())
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .switchIfEmpty(ApplicationException.customerNotFound(id))
+                .then();
     }
 
 }
