@@ -47,3 +47,12 @@ Advantages
             Customer entity might have password field. CustomerDTO might not have passsword.
      3. Versioning
      4. Validation
+
+Problem Detail
+==============
+Type    - A link to the documentation for the callers to read more about the problem. If its not
+          provided. "about:blank" is assumed.
+title   - Human readable summary of the problem.
+status  - HTTP status code.
+detail  - Detailed message specific to the problem.
+instance- The URI which caused the problem.
