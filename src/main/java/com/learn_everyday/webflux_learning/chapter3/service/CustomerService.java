@@ -4,6 +4,9 @@ import com.learn_everyday.webflux_learning.chapter3.dto.CustomerDto;
 import com.learn_everyday.webflux_learning.chapter3.mapper.EntityDtoMapper;
 import com.learn_everyday.webflux_learning.chapter3.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,6 +19,19 @@ public class CustomerService {
 
     public Flux<CustomerDto> getAllCustomers() {
         return this.customerRepository.findAll().map(EntityDtoMapper::toDto);
+    }
+
+    public Flux<CustomerDto> getAllCustomers(Integer pageOffset, Integer size) {
+        return this.customerRepository.findBy(PageRequest.of(pageOffset -1, size))
+                .map(EntityDtoMapper::toDto);
+    }
+
+    public Mono<Page<CustomerDto>> getAllCustomersInPage(PageRequest pageRequest) {
+//        return this.customerRepository.findAllBy(pageRequest)
+//                .collectList()
+//                .zipWith(this.customerRepository.count())
+//                .map(tuple -> new PageImpl<>(tuple.getT1(), pageRequest, tuple.getT2()));
+        return null;
     }
 
     public Mono<CustomerDto> getCustomerById(Integer id) {
