@@ -96,7 +96,7 @@ public class CustomerServiceTest {
     public void updateCustomer() {
         var updateCustomer = new CustomerDto(null, "novel", "novel@gmail.com");
 
-        // create
+        // update
         this.webTestClient.put()
                 .uri("/customers/10")
                 .bodyValue(updateCustomer)
