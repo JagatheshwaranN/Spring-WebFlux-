@@ -5,10 +5,12 @@ import com.learn_everyday.webflux_learning.chapter6.dto.CustomerDto;
 import com.learn_everyday.webflux_learning.chapter6.exception.ApplicationException;
 import com.learn_everyday.webflux_learning.chapter6.validator.RequestValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+@Service
 public class CustomerRequestHandler {
 
     @Autowired
@@ -20,6 +22,14 @@ public class CustomerRequestHandler {
         //request.queryParams();
         return this.customerService.getAllCustomers()
                 .as(customerDtoFlux -> ServerResponse.ok().body(customerDtoFlux, CustomerDto.class));
+    }
+
+    public Mono<ServerResponse> getPaginatedCustomers(ServerRequest request) {
+        var pageOffset = request.queryParam("pageOffset").map(Integer::parseInt).orElse(1);
+        var size = request.queryParam("size").map(Integer::parseInt).orElse(1);
+        return this.customerService.getAllCustomers(pageOffset, size)
+                .collectList()
+                .flatMap(ServerResponse.ok()::bodyValue);
     }
 
     public Mono<ServerResponse> getCustomer(ServerRequest request) {
