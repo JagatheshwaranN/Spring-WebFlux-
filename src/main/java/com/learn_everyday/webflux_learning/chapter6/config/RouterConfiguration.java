@@ -5,6 +5,7 @@ import com.learn_everyday.webflux_learning.chapter6.exception.InvalidInputExcept
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
@@ -32,6 +33,21 @@ public class RouterConfiguration {
                 .build();
     }
 
+//  Request Predicate
+//    @Bean
+//    public RouterFunction<ServerResponse> customerRoutesWithRequestPredicate() {
+//        return RouterFunctions.route()
+//                .GET(request -> true, this.customerRequestHandler::allCustomers)
+//                .GET("/customers", this.customerRequestHandler::allCustomers)
+//                .GET("/customers/paginated", this.customerRequestHandler::getPaginatedCustomers)
+//                .GET("/customers/{id}", RequestPredicates.path("*/1?"), this.customerRequestHandler::getCustomer)
+//                .POST("/customers", this.customerRequestHandler::saveCustomer)
+//                .PUT("/customers/{id}", this.customerRequestHandler::updateCustomer)
+//                .DELETE("/customers/{id}", this.customerRequestHandler::deleteCustomer)
+//                .onError(CustomerNotFoundException.class, this.applicationExceptionHandler::handleException)
+//                .onError(InvalidInputException.class, this.applicationExceptionHandler::handleException)
+//                .build();
+//    }
 
 // Web Filter to allow the request to pass on to next filter
 //

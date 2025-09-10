@@ -56,3 +56,11 @@ title   - Human readable summary of the problem.
 status  - HTTP status code.
 detail  - Detailed message specific to the problem.
 instance- The URI which caused the problem.
+
+Web Client
+==========
+1. Reactor based fluent API for making HTTP requests.
+    Wrapper around reactor-netty.
+2. Non-Blocking.
+3. Immutable.
+4. Thread safe.
