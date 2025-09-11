@@ -17,7 +17,7 @@ public class AbstractWebClient {
         });
     }
 
-    private WebClient createWebClient(Consumer<WebClient.Builder> builderConsumer) {
+    public WebClient createWebClient(Consumer<WebClient.Builder> builderConsumer) {
         var builder = WebClient.builder()
                 .baseUrl("http://localhost:7070/demo02");
         builderConsumer.accept(builder);
