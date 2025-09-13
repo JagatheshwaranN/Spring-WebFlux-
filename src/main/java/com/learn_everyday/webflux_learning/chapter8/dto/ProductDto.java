@@ -1,0 +1,4 @@
+package com.learn_everyday.webflux_learning.chapter8.dto;
+
+public record ProductDto(Integer id, String description, Integer price) {
+}

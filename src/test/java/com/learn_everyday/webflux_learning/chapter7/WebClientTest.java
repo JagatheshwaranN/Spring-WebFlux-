@@ -6,14 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ProblemDetail;
-import org.springframework.web.reactive.function.client.ClientResponse;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.reactive.function.client.*;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
 import java.util.Map;
+import java.util.UUID;
 
 public class WebClientTest {
 
@@ -23,7 +22,10 @@ public class WebClientTest {
 
     private final WebClient webClient = abstractWebClient.createWebClient();
     private final WebClient webClientWithHeader = abstractWebClient.createWebClient(header -> header.defaultHeader("java", "secret"));
-        private final WebClient webClientWithAuth = abstractWebClient.createWebClient(header -> header.defaultHeaders(auth -> auth.setBasicAuth("java", "secret")));
+    private final WebClient webClientWithAuth = abstractWebClient.createWebClient(header -> header.defaultHeaders(auth -> auth.setBasicAuth("java", "secret")));
+    private final WebClient webClientWithBearerAuth = abstractWebClient.createWebClient(header -> header.defaultHeaders(auth -> auth.setBearerAuth("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")));
+    private final WebClient webClientWithGenBearerAuth = abstractWebClient.createWebClient(
+            builder -> builder.filter(generateToken()).filter(requestLogger()));
 
     @Test
     public void getTest() throws InterruptedException {
@@ -80,6 +82,7 @@ public class WebClientTest {
     }
 
 
+    // Send the request payload asynchronously.
     @Test
     public void postBodyTest() {
         var mono = Mono.fromSupplier(() -> new Product(null, "iwatch", 500))
@@ -141,7 +144,6 @@ public class WebClientTest {
 
     @Test
     public void errorHandlerTest() {
-
         this.webClient.get()
                 .uri("/lec05/calculator/{a}/{b}", 20, 10)
                 .header("operation", "@")
@@ -228,6 +230,70 @@ public class WebClientTest {
                 .as(StepVerifier::create)
                 .expectComplete()
                 .verify();
+    }
+
+    @Test
+    public void bearerAuthTest() {
+        this.webClientWithBearerAuth.get()
+                .uri("/lec08/product/{id}", 1)
+                .retrieve()
+                .bodyToMono(Product.class)
+                .doOnError(WebClientResponseException.class, ex -> log.info("{}", ex.getResponseBodyAs(ProblemDetail.class)))
+                .onErrorReturn(WebClientResponseException.Unauthorized.class, new Product(0, null, 0))
+                .doOnNext(abstractWebClient.print())
+                .then()
+                .as(StepVerifier::create)
+                .expectComplete()
+                .verify();
+    }
+
+    @Test
+    public void exchangeFilterTest() {
+        this.webClientWithGenBearerAuth.get()
+                .uri("/lec09/product/{id}", 1)
+                .retrieve()
+                .bodyToMono(Product.class)
+                .doOnNext(abstractWebClient.print())
+                .then()
+                .as(StepVerifier::create)
+                .expectComplete()
+                .verify();
+    }
+
+    private ExchangeFilterFunction generateToken() {
+        return (request, next) -> {
+            var token = UUID.randomUUID().toString().replace("-", "");
+            log.info("Generated Token: {}", token);
+            var modifiedRequest = ClientRequest.from(request).headers(httpHeaders -> httpHeaders.setBearerAuth(token)).build();
+            return next.exchange(modifiedRequest);
+        };
+    }
+
+    private ExchangeFilterFunction requestLogger() {
+        return (request, next) -> {
+            var isEnabled = (Boolean) request.attributes().getOrDefault("enable-logging", false);
+            if (isEnabled) {
+                log.info("URL: {}", request.url());
+                log.info("HTTP Method: {}", request.method());
+            }
+            return next.exchange(request);
+        };
+    }
+
+    @Test
+    public void webClientAttributeTest() {
+        for (int i = 1; i <= 4; i++) {
+            this.webClientWithGenBearerAuth.get()
+                    .uri("/lec09/product/{id}", i)
+                    .attribute("enable-logging", i % 2 == 0)
+                    .retrieve()
+                    .bodyToMono(Product.class)
+                    .doOnNext(abstractWebClient.print())
+                    .then()
+                    .as(StepVerifier::create)
+                    .expectComplete()
+                    .verify();
+        }
     }
 
 }

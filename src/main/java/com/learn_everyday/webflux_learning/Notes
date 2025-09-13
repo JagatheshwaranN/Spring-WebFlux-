@@ -64,3 +64,24 @@ Web Client
 2. Non-Blocking.
 3. Immutable.
 4. Thread safe.
+
+Using WebFlux, the APIs will be exposed for the application.
+Using WebClient the request is sent to remote services.
+
+Streaming Advantages
+====================
+1. We will setup connection once and keep sending the messages in a streaming fashion.
+2. No need to wait for previous request to complete.
+3. Reduced Network traffic / latency.
+4. You can use JSON to create a product / item.
+
+JSON Line (Have advantage over JSON Array)
+=========
+1. AKA ND-JSON [new-line delimited]
+2. Each line is 1 JSON object
+    a. self contained
+    b. easy to parse
+    c. great for streaming
+    d. massive datasets
+3. JSON array is good for smaller and related data.
+   Example: Reviews for a product.
