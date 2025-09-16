@@ -85,3 +85,44 @@ JSON Line (Have advantage over JSON Array)
     d. massive datasets
 3. JSON array is good for smaller and related data.
    Example: Reviews for a product.
+
+gZip
+====
+1. If the response size is large (in KBs), it will take more time for the client to receive.
+2. Client might observe increased response time. The apps might appear to be performing poorly.
+3. But it could be just network latency.
+
+1. gZip is a technique to compress the response before sending over the network.
+2. It will work well in congested network + response size is large.
+Note:
+====
+1. Server requires additional processing to compress.
+2. It might have negative effect when the response size is small.
+3. Do NOT use local machine to test. You will not see any improvement.
+
+Server Side:
+===========
+server.compression.enabled=true
+server.compression.min-response-size=2048
+server.compression.mime-types=application/json,application/xml
+
+Client Side Request Header:
+===========================
+Accept-Encoding: gzip
+
+Connection Pooling
+==================
+1. Connection setup takes time.
+2. Keep-alive => to reuse connections.
+3. HTTP 1.1
+    a. 1 connection per request.
+
+Below Command to Monitor Network Connections
+============================================
+The below command to monitor the network connections.
+
+Netstat command to monitor the network connections
+netstat -an| grep -w 127.0.0.1.7070
+
+To watch
+watch 'netstat -an| grep -w 127.0.0.1.7070'
