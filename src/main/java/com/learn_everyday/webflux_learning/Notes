@@ -126,3 +126,19 @@ netstat -an| grep -w 127.0.0.1.7070
 
 To watch
 watch 'netstat -an| grep -w 127.0.0.1.7070'
+
+HTTP2
+=====
+1. Multiplexing
+2. Binary Protocol
+3. Header Compression
+
+SubscribeOn
+===========
+1. Try to use reactive libraries for your application.
+    R2DBC, mongo, redis, kafka, pulsar, elasticsearch
+2. What if we don't have one?
+   We have to use it as below.
+   Mono.fromSupplier(() -> yourlib.invokeMethod())
+   ...
+   .subscribeOn(Schedulers.boundedElastic());
