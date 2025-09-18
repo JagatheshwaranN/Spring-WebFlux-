@@ -3,7 +3,6 @@ package com.learn_everyday.webflux_learning.chapter10;
 import com.learn_everyday.webflux_learning.chapter10.dto.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
