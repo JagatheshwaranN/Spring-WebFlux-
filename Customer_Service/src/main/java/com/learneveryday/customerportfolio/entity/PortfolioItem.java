@@ -10,7 +10,7 @@ public class PortfolioItem {
     @Id
     private Integer id;
 
-    private Customer customerId;
+    private Integer customerId;
 
     private Ticker ticker;
 
