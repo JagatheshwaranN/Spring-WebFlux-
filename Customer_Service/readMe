@@ -1,0 +1,22 @@
+Customer Service
+================
+Trade Action
+============
+BUY
+===
+1. Deduct  amount from Customer balance.
+2. Add an entry into portfolio_item table (if no records found).
+3. Increase the quantity in the portfolio_item table (if a record is found).
+
+SELL
+====
+1. Credit amount to customer balance.
+2. Deduct quantity sold in the portfolio_item table.
+
+Exceptions
+==========
+1. Customer NOT FOUND
+2. Customer does NOT have enough balance
+3. Customer does NOT have enough shares
+4. Return the error as Problem Detail
+   a. 4XX error.
